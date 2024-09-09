@@ -96,4 +96,3 @@ class UnitSerializer(serializers.ModelSerializer):
 
 
 
-

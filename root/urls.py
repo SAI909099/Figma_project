@@ -9,3 +9,5 @@ urlpatterns = [
                   path('api/v1/', include('apps.urls')),
                   path('api-auth/', include('rest_framework.urls')),
               ] + static(MEDIA_URL, document_root=MEDIA_ROOT)
+
+
