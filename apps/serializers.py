@@ -90,3 +90,9 @@ class UnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Unit
         fields = ['id', 'title', 'essential', 'essential_id', 'is_published']
+
+
+
+
+
+

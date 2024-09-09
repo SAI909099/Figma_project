@@ -68,3 +68,4 @@ class UnitListCreateView(generics.ListCreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
+
