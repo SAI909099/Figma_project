@@ -10,7 +10,6 @@ class User(AbstractUser):
 
 
 
-
 class VerificationCode(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
