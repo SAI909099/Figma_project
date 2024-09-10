@@ -1,26 +1,19 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from django.contrib.auth.models import User
+
 # from .models import VerificationCode
 from django.contrib.auth.password_validation import validate_password
+from rest_framework.serializers import ModelSerializer
 
-from apps.models import Essential, Unit
+from apps.models import Essential, Unit, User
 
 
-class RegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
+class RegisterUserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'password')
+        fields = ('email', 'password',)
 
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password']
-        )
-        return user
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -38,7 +31,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'password2')
+        fields = ( 'email', 'password', 'password2')
 
     def validate(self, data):
         if data['password'] != data['password2']:
@@ -47,7 +40,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create(
-            username=validated_data['username'],
             email=validated_data['email'],
         )
         user.set_password(validated_data['password'])
