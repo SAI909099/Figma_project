@@ -4,7 +4,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from .views import LoginView, RegistrationView, UserRegistrationView, UnitViewSet, EssentialViewSet
+from .views import LoginView, UserRegistrationView, UnitViewSet, EssentialViewSet, RegisterView
 
 router = DefaultRouter()
 router.register(r'units', UnitViewSet)
@@ -25,7 +25,7 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
-    path('register/', RegistrationView.as_view(), name='register'),
+    path('register/', RegisterView.as_view(), name='register'),
     path('register/', UserRegistrationView.as_view(), name='register'),
     path('', include(router.urls)),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
