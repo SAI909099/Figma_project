@@ -1,15 +1,16 @@
+from django.contrib.auth.views import LoginView
 from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from .views import LoginView, UnitViewSet, EssentialViewSet, UserCreateAPIView, SendEmail
+from .views import UserCreateAPIView, SendEmail, BooksListCreateAPIView, UnitsListCreateAPIView, \
+    UnitsDRetrieveUpdateDestroyAPIView
 
-router = DefaultRouter()
-router.register(r'units', UnitViewSet)
-router.register(r'essentials', EssentialViewSet)
-
+# router = DefaultRouter()
+# # router.register(r'books', BooksListCreateAPIView)
+# router.register(r'units', UnitsViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -26,16 +27,11 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('register/', UserCreateAPIView.as_view(), name='register'),
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('send_email' , SendEmail.as_view()),
+    path('send_email', SendEmail.as_view()),
+    path('books', BooksListCreateAPIView.as_view()),
+    path('Units', UnitsListCreateAPIView.as_view()),
+    path('Units/<int:pk>', UnitsDRetrieveUpdateDestroyAPIView.as_view()),
 
 ]
-
-
-
-
-
-
-
-

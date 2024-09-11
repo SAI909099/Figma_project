@@ -127,8 +127,9 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'P22 API LEARNING',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    'COMPONENT_SPLIT_REQUEST': True,  # Todo rasmdi kompdan olish uchun kerak boladi {multipart.form} da
+    'COMPONENT_SPLIT_REQUEST': True,
 }
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
