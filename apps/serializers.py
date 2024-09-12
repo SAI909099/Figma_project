@@ -29,3 +29,5 @@ class UnitsModelSerializer(ModelSerializer):
         repr['book'] = BooksModelSerializer(instance.book, context=self.context).data
         return repr
 
+
+
