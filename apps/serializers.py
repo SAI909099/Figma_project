@@ -1,33 +1,30 @@
-from django.contrib.auth import authenticate
-from rest_framework import serializers
+from http import HTTPStatus
 
-# from .models import VerificationCode
-from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
 
-from apps.models import User, Books, Units
+from apps.models import Category, Product
 
 
-class RegisterUserSerializer(ModelSerializer):
+class ProductModelSerializer(ModelSerializer):
     class Meta:
-        model = User
-        fields = ('email', 'password',)
+        model = Product
+        exclude = "slug" , "created_at"
 
-class BooksModelSerializer(ModelSerializer):
+
+class CategoryModelSerializer(ModelSerializer):
     class Meta:
-        model = Books
-        fields = '__all__'
+        model = Category
+        exclude = "slug",
 
 
-class UnitsModelSerializer(ModelSerializer):
-    class Meta:
-        model = Units
-        fields = '__all__'
+    def validate(self, attrs):
+        if len(attrs['name']) < 3:
+            raise ValidationError('name uzunligi 3 tadan katta bo\'lsin', code=HTTPStatus.BAD_REQUEST)
+        return attrs
 
-    def to_representation(self, instance: Units):
-        repr = super().to_representation(instance)
-        repr['book'] = BooksModelSerializer(instance.book, context=self.context).data
-        return repr
+
+
 
 
 

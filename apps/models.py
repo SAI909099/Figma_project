@@ -1,24 +1,17 @@
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import AbstractUser
-from django.core.validators import FileExtensionValidator
-from django.db.models import Model
-from django.db.models import Model, CharField, CASCADE, \
-    PositiveIntegerField, ForeignKey, DateTimeField, ImageField, FileField
-from django.db.models import Model, SlugField
+from django.contrib.auth.models import User
+from django.db.models import Model, CharField, DateTimeField, TextField, SmallIntegerField, DecimalField, ForeignKey, \
+    CASCADE, SET_NULL, SlugField , ImageField
+from django.db.models.functions import Now
 from django.utils.text import slugify
 
 
-class User(AbstractUser):
-    pass
-
-
-class Books(Model):
+class BaseSlugModel(Model):
     name = CharField(max_length=255)
-    image = ImageField(upload_to='book_image/', blank=True, null=True)
-    size = PositiveIntegerField(default=0, blank=True, null=True)
-    created_at = DateTimeField(auto_now_add=True)
-    slug = SlugField(max_length=255, unique=True, blank=True)
+    slug = SlugField(unique=True, blank=True)
+    created_at = DateTimeField(auto_now_add=True , db_default=Now())
+
+    class Meta:
+        abstract = True
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -33,30 +26,25 @@ class Books(Model):
     def __str__(self):
         return self.name
 
-
-class Units(Model):
-    name = CharField(max_length=255)
-    book = ForeignKey('apps.Books', on_delete=CASCADE, related_name='units')
-    file = FileField(upload_to='units_files/', validators=[
-        FileExtensionValidator(allowed_extensions=['pdf', 'docx', 'txt'])
-    ])
-
-    def __str__(self):
-        return f"Unit: {self.name} (Book: {self.book.name})"
+class Category(BaseSlugModel):
+    pass
 
 
-class Test(Model):
-    en = CharField(max_length=255)
-    uz = CharField(max_length=255)
-    audio_file = FileField(upload_to='test_audio/', validators=[
-        FileExtensionValidator(allowed_extensions=['mp3', 'wav'])
-    ])
-    unit = ForeignKey('apps.Units', on_delete=CASCADE, related_name='tests')
-
-    def __str__(self):
-        return f"Test in English: {self.en} (Unit: {self.unit.name})"
+class Product(BaseSlugModel):
+    price = DecimalField(max_digits=9 , decimal_places=2)
+    discount = SmallIntegerField()
+    quantity = SmallIntegerField()
+    description = TextField()
+    image = ImageField(upload_to="products/%y/%m/%d")
+    category = ForeignKey('apps.Category' , CASCADE , related_name='products')
 
 
-class AdminSiteSettings(Model):
-    created_by = ImageField(upload_to='created_by/')
-    connection = CharField(max_length=255)
+
+
+class Order(Model):
+    user = ForeignKey(User , SET_NULL , blank=True , null=True , related_name='orders')
+    product = ForeignKey('apps.Product' , SET_NULL, blank=True , null=True , related_name='orders')
+    quantity = SmallIntegerField()
+    created_at = DateTimeField(auto_now_add=True , db_default=Now())
+
+
